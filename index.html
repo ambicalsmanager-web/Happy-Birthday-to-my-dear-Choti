@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Choti 🎉</title>
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+header { padding: 30px 10px; }
+h1 { font-size: 2rem; }
+
+/* Intro Screen */
+#intro {
+  position: fixed;
+  inset: 0;
+  background: #ff4d6d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9999;
+  animation: fadeOut 1.5s ease forwards;
+  animation-delay: 3s;
+}
+#intro h1 { font-size: 2rem; }
+@keyframes fadeOut {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* Glowing name */
+.glow {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px #fff, 0 0 20px #ffe0f0, 0 0 30px #ff9ecb, 0 0 40px #ff6fa8;
+  animation: glowPulse 2s ease-in-out infinite alternate;
+}
+@keyframes glowPulse {
+  from { text-shadow: 0 0 8px #fff, 0 0 16px #ffd6ea, 0 0 24px #ff9ecb, 0 0 32px #ff6fa8; }
+  to   { text-shadow: 0 0 14px #fff, 0 0 26px #ffd6ea, 0 0 36px #ff9ecb, 0 0 50px #ff6fa8; }
+}
+
+.message {
+  background: white;
+  color: #333;
+  margin: 15px;
+  padding: 15px;
+  border-radius: 15px;
+}
+button {
+  padding: 12px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 25px;
+  background: #ff4d6d;
+  color: white;
+  font-size: 1rem;
+}
+#giftBox { font-size: 80px; cursor: pointer; }
+
+/* Balloons */
+.balloon {
+  position: fixed;
+  bottom: -100px;
+  font-size: 34px;
+  animation: floatUp 7s linear infinite;
+  cursor: pointer;
+}
+@keyframes floatUp {
+  from { transform: translateY(0); }
+  to { transform: translateY(-120vh); }
+}
+
+/* Firework particles */
+.particle {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.95;
+}
+</style>
+</head>
+<body>
+
+<!-- Intro Animation -->
+<div id="intro">
+  <h1>🎁 Loading Surprise...</h1>
+  <p>Get ready Choti 💖</p>
+</div>
+
+<header>
+<h1>🎂 Happy Birthday</h1>
+<div class="glow">Choti ✨</div>
+<p>You are our little princess 👑💖</p>
+</header>
+
+<audio id="bgm" autoplay loop>
+  <source src="https://www2.cs.uic.edu/~i101/SoundFiles/HappyBirthday.mid" type="audio/midi">
+</audio>
+
+<audio id="boom">
+  <source src="https://actions.google.com/sounds/v1/explosions/fireworks_burst.ogg" type="audio/ogg">
+</audio>
+
+<audio id="pop">
+  <source src="https://actions.google.com/sounds/v1/impacts/balloon_pop.ogg" type="audio/ogg">
+</audio>
+
+<div class="message">
+<p>
+Happy Birthday Choti 🎉💖<br><br>
+You bring happiness, smiles and love into our lives every single day.
+May your future be as bright as your smile 😊
+</p>
+</div>
+
+<script>
+setTimeout(()=>{
+  const intro = document.getElementById('intro');
+  if(intro) intro.remove();
+}, 4500);
+</script>
+
+<script>
+setInterval(()=>{
+  let b=document.createElement('div');
+  b.className='balloon';
+  b.style.left=Math.random()*100+'%';
+  b.innerText='🎈';
+  b.onclick = () => {
+    document.getElementById('pop').currentTime = 0;
+    document.getElementById('pop').play();
+    b.innerText = '💥';
+    setTimeout(()=>b.remove(),200);
+  };
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),7000);
+},500);
+</script>
+
+<h2>🎁 Tap to Open Surprise 🎁</h2>
+<div id="giftBox" onclick="openGift()">🎁</div>
+<p id="giftMsg"></p>
+
+<script>
+function fireworkBurst(x, y) {
+  const colors = ['#ff4d6d','#ffd166','#06d6a0','#4cc9f0','#f72585','#b5179e'];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = Math.random() * 2 * Math.PI;
+    const speed = 2 + Math.random() * 4;
+    const dx = Math.cos(angle) * speed;
+    const dy = Math.sin(angle) * speed;
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    document.body.appendChild(p);
+    let life = 0;
+    const interval = setInterval(() => {
+      life++;
+      const nx = x + dx * life * 2;
+      const ny = y + dy * life * 2 + life * 0.8;
+      p.style.transform = `translate(${nx - x}px, ${ny - y}px)`;
+      p.style.opacity = String(1 - life/40);
+      if (life > 40) {
+        clearInterval(interval);
+        p.remove();
+      }
+    }, 16);
+  }
+}
+
+function openGift(){
+  document.getElementById('giftMsg').innerText = "🎉 Surprise Choti! We Love You So Much 💖";
+  const boom = document.getElementById('boom');
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  for (let i=0;i<6;i++){
+    setTimeout(()=>{
+      boom.currentTime = 0;
+      boom.play();
+      fireworkBurst(Math.random()*w, Math.random()*h*0.7);
+    }, i*350);
+  }
+}
+</script>
+
+<h2>🎮 Tap Game 🎮</h2>
+<p>Tap the button as many times as you can!</p>
+<button onclick="score++ ; document.getElementById('score').innerText=score">Tap Me 🎯</button>
+<p>Score: <span id="score">0</span></p>
+<script>let score=0;</script>
+
+<button onclick="shareWhatsApp()">📲 Share on WhatsApp</button>
+<script>
+function shareWhatsApp(){
+  let url = window.location.href;
+  let text = "🎂 Birthday Surprise for Choti 🎉 " + url;
+  window.open("https://wa.me/?text=" + encodeURIComponent(text));
+}
+</script>
+
+<footer>
+Made with ❤️ for Choti
+</footer>
+
+</body>
+</html>
